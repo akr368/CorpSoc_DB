@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<?php
+session_start();
+
+
+?>
+<html>
+<head>
+<link rel="stylesheet" href="assets/demo.css">
+    <link rel="stylesheet" href="assets/Post.css">
+</head>
+    <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js'></script>
+<body ng-app = 'app'> 
+   <div class = "header">
+
+     <a class="left" HREF="update_profile.php"> Update Profile</a> 
+<a class="left" HREF="notifications.php"> Notifications </a>
+<a class="left" HREF="event.php"> Events </a>
+  <a class="left" HREF="myconnections.php"> My Connections </a>
+  <a class="right" href="logout.php">Logout</a>
+    </div>
+
+    <div class = "main-content">
+        <table>
+            <form name='search' method = "post" action = "search.php" >
+    <tr>  
+        <td> <input type="text" name="search" size="50" required/> </td> 
+    </tr>
+
+    <tr>
+        <td>    <button class="btn" type="submit" name="submit" value="Search">Search </button> </td>
+
+     <input type = 'radio' Name ='search1' value= 'Friends'/>People
+     <input type = 'radio' Name ='search1' value= 'Posts'/>Posts
+
+     </tr>
+            </form>
+</table>
+    </div>    
+<form action="create_post.php" METHOD = 'POST' enctype='multipart/form-data'>
+    <div class="main-content" >
+        
+    <strong>Write a post</strong> <br>
+    <span>Title:</span>
+    <input type = "text" name = "title" required><br>
+    <textarea placeholder="What's on your mind?" name="content" cols = 50 rows = 3 maxlength=500></textarea>
+    <br>
+    <select name="viz">
+  <option value=0>Public</option>
+  <option value=1>Friends Only</option>
+   <option value=2>Friends of Friends</option>
+        
+            </select>
+            <br>
+                <input type="file" name = "myfile" ><br>
+               <td>Location: </td>
+                <td><select name="loc">
+                    
+                    <option value= 1 >Manhattan, New York</option>
+                    <option value= 2 >Palo Alto, California</option>
+                    <option value= 3>Dallas, Texas</option>
+                    <option value= 4>Seattle, Washington</option>
+                    
+                    </select>
+            </td>
+        
+                
+            <button class="btn" type = "submit" name = "load_post">Share Post</button>
+        
+        
+    </div>
+</form>
+    
+
+<div ng-controller='PostsCtrl' class='main-content'>
+    <h2>Recent Posts</h2> <a class="refresh_button" href="home_feed.phtml"><img src="refresh.png"  width="20" height="20"></a>
+    <ul class='list-group'>
+      <li ng-repeat="p in posts" class='container-item'>
+            
+          <strong ng-model = "post_title">{{p.Title}}</strong><br>
+          
+          <span><a href="profiles.php?id={{p.PostBy}}">@{{p.PostBy}} </a>  </span><br>
+          
+          <span>{{p.Content}}</span><br>
+          <span>{{p.Loc}}</span><br>
+         <img class="image" src="{{p.attachment}}" width="350" height="auto" /> <br>
+          
+          <button ng-click="like(p.PostId)" ng-model ="like" >
+              <span>{{p.likes}}</span>  <img src = "like.png" width="20" height="20">
+          </button>
+          <input type = "text" ng-model = "cmt_content">
+          
+          <button ng-click = "comment(p.PostId,cmt_content)" name="comment"><img src = "comment.png" width="20" height="20">
+          
+          </button>
+        
+        <br>
+          <div >
+            
+              <ul>
+
+              <li ng-repeat="c in p.comments" class='container-comment'>
+                
+                <span>{{c.cmt_content}}</span>
+                  <span class="cmt">{{c.cmtBy}}</span>
+                </li>
+            </ul>
+            
+          </div>
+      </li><br>
+    </ul>
+
+    
+    
+    </div>
+    
+<script>
+    
+var app = angular.module('app',[]);
+app.controller("PostsCtrl",function ($scope, $http){
+    
+    $http.get("Post_Feed.php").then(function(response){
+        $scope.posts = response.data.records;
+        $scope.comments = response.data.records.comments;
+        });
+   
+    
+  $scope.like = function(pid){
+        console.log(pid);
+        $http({
+            url:'likes.php',
+            method:'POST',
+            data: {
+                pid: pid
+            }
+
+        }).then (function(response){
+           console.log(JSON.stringify(response));
+        });
+        
+    }
+    
+    $scope.comment = function(pid, comment){
+        console.log(comment);
+        $http({
+            url:'comments.php',
+            method:'POST',
+            data: {
+                pid: pid,
+                content: comment 
+            }
+        }).then(function(response){
+            console.log(JSON.stringify(response));
+        })
+    }
+  
+});
+        
+</script>    
+ </body>   
+</html>
