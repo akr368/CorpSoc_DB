@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+
+
+    <title>Validation</title>
+
+
+<body>
+ 
+
+<h1>Registration Form</h1>
+<link rel="stylesheet" href="assets/demo.css">
+    <link rel="stylesheet" href="assets/Post.css">
+
+<table>
+<form name='registration' method = "post" action = "registration.php">
+
+<tr>    <td>
+
+           <label for="userid">Enter Username:</label> </td>
+
+      <td>      <input type="text" name="username" size="12" required/>
+
+    </td> </tr>
+
+
+<tr>        <td>
+
+            <label for="pass">Password:</label> </td>
+
+        <td>    <input type="password" name="passid" size="12" required />
+
+        </td>
+
+    </tr>     
+
+<tr>       <td>     <label for="empid">Employee id:</label>
+    </td>
+        <td>    <input type="text" name="emp_id" size="50" required />
+    </td>
+    
+    </tr>
+        
+
+        <tr>
+
+         <td>   <label for="empid">Dept id:</label>
+            </td>
+            <td><input type="" name="dept_id" size="50" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <label>Project Code (if applicable):</label></td>
+      <td>      <input type = "text" name="proj_code" required/> </td>
+        </tr>
+ <tr>
+     <td>    <input type="submit" name="submit" value="Submit" /> </td>
+    </tr>
+    <?php
+        session_start();   
+        if(isset($_SESSION['message1'])){
+          echo $_SESSION['message1'];
+          unset($_SESSION['message1']);
+        }
+
+     ?>
+</form>
+</table>
+</body>
+
+</html>
